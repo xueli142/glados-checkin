@@ -59,12 +59,14 @@ const glados = async ()=>{
                 `还剩下${Number(status?.data?.leftDays)}天`
             )
         }catch(error){
-            const map = {
-                "Today's observation logged. Return tomorrow for more points.": '已打卡，明天再来',
+            const ALREADY = "Today's observation logged. Return tomorrow for more points."
+            if(error?.message === ALREADY){
+                notice.push('已打卡，明天再来')
+            }else{
+                notice.push('出错了',
+                    `${error}`
+                )
             }
-            notice.push('出错了',
-                map[error?.message] || `${error}`
-            )
         }
 
         //无论签到是否成功，都查询积分情况一并展示
