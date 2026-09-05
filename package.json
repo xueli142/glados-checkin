@@ -2,9 +2,9 @@
   "name": "glados-checkin",
   "version": "1.0.0",
   "description": "",
-  "main": "glados.js",
+  "main": "main.js",
   "scripts": {
-    "main": "node glados.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
