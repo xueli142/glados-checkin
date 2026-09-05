@@ -2,7 +2,7 @@
 
   on:
     schedule:
-      - cron: "0 1 1 * *"   # 每月1号 UTC 01:00 自动执行
+      - cron: "0 1 * * *"   # 每天 UTC 01:00 自动执行
     workflow_dispatch:      # 可以手动执行一次
 
   permissions:
