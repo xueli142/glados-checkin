@@ -41,7 +41,7 @@ const action = await fetch ('https://glados.cloud/api/user/checkin',{
 )
 
 }catch(error){
-    notice.push('出错了'
+    notice.push('出错了',
         `${error}`
     )
     
