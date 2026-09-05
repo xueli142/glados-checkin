@@ -1,5 +1,28 @@
 
 
+const notify = async (text)=>{
+    const base = process.env.NOTIFY
+    if(!base)return console.log('[notify] 未配置 NOTIFY，跳过推送')
+    try{
+        const url = new URL(base)
+        const body = { text }
+        if(!url.searchParams.has('chat_id')){
+            const chatId = process.env.TG_CHAT_ID || process.env.CHAT_ID
+            if(!chatId)return console.log('[notify] NOTIFY 未带 chat_id 且未配置 TG_CHAT_ID，跳过推送')
+            body.chat_id = chatId
+        }
+        const res = await fetch(url.href,{
+            method:'POST',
+            headers:{'content-type':'application/json'},
+            body: JSON.stringify(body)
+        }).then(r=>r.json())
+        if(res?.ok)console.log('[notify] 推送成功')
+        else console.log('[notify] 推送失败:', res?.description || JSON.stringify(res))
+    }catch(e){
+        console.log('[notify] 推送异常:', String(e))
+    }
+}
+
 const glados = async ()=>{
 
     //用于存储签到结果
@@ -37,7 +60,7 @@ const action = await fetch ('https://glados.cloud/api/user/checkin',{
     if(status?.code)throw new Error(status?.message)
             notice.push('glados签到成功',
                 `${action?.message}`,
-                `还剩下${Number(status?.data?.leftDays)}`
+                `还剩下${Number(status?.data?.leftDays)}天`
 )
 
 }catch(error){
@@ -59,6 +82,10 @@ for( const line of result){
 }
 console.log('=======================')
 
+//推送结果到机器人
+if(result.length){
+    await notify(`glados 签到结果\n${result.join('\n')}`)
+}
 }
 
 main()
