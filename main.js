@@ -62,6 +62,19 @@ const action = await fetch ('https://glados.cloud/api/user/checkin',{
                 `${action?.message}`,
                 `还剩下${Number(status?.data?.leftDays)}天`
 )
+            try{
+                const points = await fetch ('https://glados.one/api/user/points',{
+                    method:'GET',
+                    headers:{...common,'referer':'https://glados.one/console'}
+                }).then((r)=>r.json())
+                if(points?.code)throw new Error(points?.message)
+                const today = points?.history?.[0]
+                notice.push(`当前${Number(points?.points)}点`,
+                    today ? `今日${Number(today?.change) > 0 ? '+' : ''}${Number(today?.change)}点，连续签到${points?.streak}天` : ''
+                )
+            }catch(e){
+                notice.push(`积分查询失败: ${e.message}`)
+            }
 
 }catch(error){
     notice.push('出错了',
