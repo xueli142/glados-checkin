@@ -45,8 +45,9 @@ const glados = async ()=>{
                 headers:{...common,'content-type':'application/json'},
                 body:'{"token":"glados.cloud"}'
             }).then((r)=>r.json())
-            //如果action.code存在为真，视为签到失败
-            if(action?.code)throw new Error(action?.message)
+            //新接口: 成功返回code:1, 失败带reason字段(如device-mismatch)
+            if(action?.reason)throw new Error(`${action.reason}: ${action.message}`)
+            if(action?.code&&action.code!==1)throw new Error(action?.message)
 
             const status = await fetch ('https://glados.cloud/api/user/status',{
                 method:'GET',
